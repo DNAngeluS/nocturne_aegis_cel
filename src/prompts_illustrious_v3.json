@@ -1,0 +1,62 @@
+[
+  {
+    "id": "nacel_001_portrait_woman",
+    "aspect": "portrait",
+    "content_tags": "adult woman, close portrait, long black hair, solemn gaze, dark ceremonial collar, looking at viewer",
+    "caption": "nacel_v1, an adult woman with long black hair and a solemn gaze wearing a dark ceremonial collar, close portrait, looking at viewer"
+  },
+  {
+    "id": "nacel_002_portrait_man",
+    "aspect": "portrait",
+    "content_tags": "adult man, close portrait, short silver hair, side lit face, armored coat collar, looking away",
+    "caption": "nacel_v1, an adult man with short silver hair wearing an armored coat collar, close portrait, looking away"
+  },
+  {
+    "id": "nacel_003_bust_pilot",
+    "aspect": "portrait",
+    "content_tags": "adult sky pilot, bust shot, cracked helmet in hand, long coat, cockpit glow, serious expression",
+    "caption": "nacel_v1, an adult sky pilot holding a cracked helmet, wearing a long coat, bust shot, cockpit glow, serious expression"
+  },
+  {
+    "id": "nacel_004_fullbody_spear",
+    "aspect": "full_body",
+    "content_tags": "adult spear bearer, full body, standing on cathedral bridge, layered armor, long ribbons, moon behind",
+    "caption": "nacel_v1, an adult spear bearer standing on a cathedral bridge, full body, layered armor, long ribbons, moon in the background"
+  },
+  {
+    "id": "nacel_005_fullbody_wanderer",
+    "aspect": "full_body",
+    "content_tags": "adult wanderer, full body, dark layered cloth, small metal accents, walking through flooded ruins",
+    "caption": "nacel_v1, an adult wanderer wearing dark layered cloth with small metal accents, walking through flooded ruins, full body"
+  },
+  {
+    "id": "nacel_006_action_swordsman",
+    "aspect": "full_body",
+    "content_tags": "adult swordsman, action pose, diagonal sword slash, broken armor plates, energy fragments, dynamic motion",
+    "caption": "nacel_v1, an adult swordsman in an action pose with a diagonal sword slash, broken armor plates, energy fragments, dynamic motion"
+  },
+  {
+    "id": "nacel_007_action_shield",
+    "aspect": "square",
+    "content_tags": "adult shield knight, impact pose, large ornate shield, shattered stone fragments, defensive stance",
+    "caption": "nacel_v1, an adult shield knight holding a large ornate shield in an impact pose, shattered stone fragments, defensive stance"
+  },
+  {
+    "id": "nacel_008_wide_city",
+    "aspect": "wide",
+    "content_tags": "lone figure, wide shot, ruined futuristic avenue, gothic towers, black water reflections, huge moon",
+    "caption": "nacel_v1, a lone figure standing in a ruined futuristic avenue with gothic towers, black water reflections, huge moon, wide shot"
+  },
+  {
+    "id": "nacel_009_mech",
+    "aspect": "square",
+    "content_tags": "winged humanoid machine, standing on launch rail, ornate armor plating, exposed joints, mechanical halo",
+    "caption": "nacel_v1, a winged humanoid machine standing on a launch rail with ornate armor plating, exposed joints, and a mechanical halo"
+  },
+  {
+    "id": "nacel_010_object_sword",
+    "aspect": "square",
+    "content_tags": "ornate sword and scabbard, object study, black metal blade, antique gold trim, violet gemstones",
+    "caption": "nacel_v1, an ornate sword and scabbard with a black metal blade, antique gold trim, and violet gemstones, object study"
+  }
+]

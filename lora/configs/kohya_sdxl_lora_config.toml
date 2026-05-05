@@ -1,0 +1,46 @@
+# Kohya SDXL LoRA starter config for nacel_v1
+# Update paths before running.
+
+pretrained_model_name_or_path = "OnomaAIResearch/Illustrious-xl-early-release-v0"
+output_name = "nacel_v1_illustriousxl_style_lora"
+output_dir = "./output"
+train_data_dir = "./dataset_final"
+logging_dir = "./logs"
+
+resolution = "1024,1024"
+enable_bucket = true
+bucket_no_upscale = true
+min_bucket_reso = 512
+max_bucket_reso = 1536
+
+network_module = "networks.lora"
+network_dim = 32
+network_alpha = 32
+
+train_batch_size = 2
+gradient_accumulation_steps = 2
+max_train_epochs = 10
+save_every_n_epochs = 1
+save_model_as = "safetensors"
+
+learning_rate = 0.0001
+unet_lr = 0.0001
+text_encoder_lr = 0.00001
+lr_scheduler = "cosine"
+lr_warmup_steps = 100
+optimizer_type = "AdamW8bit"
+
+mixed_precision = "bf16"
+save_precision = "bf16"
+cache_latents = true
+cache_latents_to_disk = true
+caption_extension = ".txt"
+shuffle_caption = false
+keep_tokens = 1
+
+xformers = true
+clip_skip = 2
+seed = 23111990
+
+# Recommended first run target:
+# 24-30 curated images, 8-12 epochs, inspect every saved epoch.

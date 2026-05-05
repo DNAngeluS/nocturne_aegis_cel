@@ -1,0 +1,37 @@
+# Local environments
+.venv/
+venv/
+env/
+
+# Python cache and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Project data and generated outputs
+data/
+outputs/
+runs/
+artifacts/
+
+# Model and training artifacts
+*.ckpt
+*.safetensors
+*.pt
+*.pth
+
+# Local secrets and config
+.env
+.env.*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.memory
