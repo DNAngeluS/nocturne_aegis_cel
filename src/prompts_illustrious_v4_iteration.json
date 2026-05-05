@@ -1,0 +1,20 @@
+[
+  {
+    "id": "nacel_v4_001_portrait_pilot",
+    "aspect": "portrait",
+    "content_tags": "adult sky pilot, close portrait, cracked helmet held near chest, long dark hair, solemn gaze, cockpit glow behind, looking at viewer",
+    "caption": "nacel_v1, an adult sky pilot with long dark hair holding a cracked helmet near the chest, close portrait, cockpit glow behind, looking at viewer"
+  },
+  {
+    "id": "nacel_v4_002_fullbody_knight",
+    "aspect": "full_body",
+    "content_tags": "masked androgynous knight, full body, standing in flooded cathedral corridor, long ribbons and cables, reflective black water, vertical windows, centered composition",
+    "caption": "nacel_v1, a masked androgynous knight standing in a flooded cathedral corridor with reflective black water, long ribbons and cables, full-body centered composition"
+  },
+  {
+    "id": "nacel_v4_003_mech_bridge",
+    "aspect": "wide",
+    "content_tags": "winged humanoid machine, kneeling on ruined launch bridge, folded mechanical wings, exposed joints, plated limbs, distant gothic city ruins, dramatic wide shot",
+    "caption": "nacel_v1, a winged humanoid machine kneeling on a ruined launch bridge with folded mechanical wings, exposed joints, plated limbs, and distant gothic city ruins, dramatic wide shot"
+  }
+]
