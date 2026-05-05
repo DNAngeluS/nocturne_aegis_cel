@@ -1,0 +1,20 @@
+[
+  {
+    "id": "nacel_v4_001_portrait_pilot",
+    "aspect": "portrait",
+    "content_tags": "general, 1girl, solo, portrait, upper body, long black hair, blue eyes, military jacket, holding helmet, cockpit, looking at viewer, solemn, science fiction, dark theme",
+    "caption": "nacel_v1, an adult sky pilot with long dark hair holding a helmet, upper-body portrait, cockpit background, looking at viewer"
+  },
+  {
+    "id": "nacel_v4_002_fullbody_knight",
+    "aspect": "full_body",
+    "content_tags": "general, 1boy, solo, full body, mask, armor, cathedral, flooded floor, water reflection, ribbons, cables, looking at viewer, dark theme, fantasy, science fiction",
+    "caption": "nacel_v1, a masked knight in armor standing in a flooded cathedral corridor with ribbons and cables, full-body composition"
+  },
+  {
+    "id": "nacel_v4_003_mech_bridge",
+    "aspect": "wide",
+    "content_tags": "general, mecha, robot, mechanical wings, ruined bridge, ruined city, science fiction, dramatic lighting, wide shot, detailed background, dark theme",
+    "caption": "nacel_v1, a winged humanoid machine on a ruined bridge with a ruined city in the background, wide shot"
+  }
+]
