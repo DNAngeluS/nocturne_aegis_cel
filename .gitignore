@@ -28,6 +28,7 @@ artifacts/
 # Local secrets and config
 .env
 .env.*
+!.env.example
 
 # OS/editor files
 .DS_Store

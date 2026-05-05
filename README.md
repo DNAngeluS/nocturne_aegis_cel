@@ -49,6 +49,8 @@ Main changes:
 
 Preferred environment: Google Colab.
 
+Before loading gated or frequently requested Hugging Face models in Colab, set `HF_TOKEN` in Colab Secrets or as an environment variable so downloads are authenticated and less likely to hit anonymous rate limits.
+
 Recommended first smoke test:
 - NUM_IMAGES_PER_PROMPT = 2
 - NUM_INFERENCE_STEPS = 38
