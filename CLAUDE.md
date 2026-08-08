@@ -28,8 +28,9 @@ LoRA-preparation pipeline. Most "code" lives inside Jupyter notebooks in
    (dual text-encoder channels, CLIP 77-token limit, tag-mode vs. prose, and
    the full v1→v4 notebook version history/rationale).
 5. `.agents/lora-training.md` — dataset plan, captioning rule, audit
-   workflow, training configs, and the current unresolved base-model
-   discrepancy.
+   workflow, training configs, and the base-model decision record (three
+   options researched, one chosen as canonical for both candidate generation
+   and LoRA training).
 6. `.agents/repo-notes.md` — where the repo's actual structure diverges from
    what `README.md`/`AGENTS.md` describe (e.g. `.memory/` and `data/` don't
    exist in a fresh checkout), environment quirks, and the local/Colab parity

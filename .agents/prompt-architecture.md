@@ -76,9 +76,10 @@ All three enforce the same invariant (asserted in the notebook): every row's
 ## v4 current generation defaults (check the `CONFIG` cell for the live values)
 
 - Model: `OnomaAIResearch/Illustrious-XL-v2.0`, loaded via `from_single_file`
-  (single safetensors file, not a Diffusers-format repo) — **note this is a
-  different checkpoint than the one `lora/README.md` and the LoRA training
-  configs recommend**; see `repo-notes.md` for that discrepancy.
+  (single safetensors file, not a Diffusers-format repo) — this is also the
+  canonical LoRA training base (`lora/README.md` and the LoRA training
+  configs were updated to match); see `lora-training.md` for the base-model
+  decision record and the alternatives considered.
 - Scheduler: `dpmpp_2m_karras` (DPM++ 2M Karras), configurable to `euler_a` or
   `default`.
 - Steps: 28, Guidance scale: 6.5, `CLIP_SKIP = None` by default.

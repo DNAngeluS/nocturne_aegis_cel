@@ -78,28 +78,63 @@ batch for the training subset.
   to "long-haired armored woman, sword, violet ruins." Treat it as one seed
   data point among 24-30, not a template.
 
-## Base model — unresolved discrepancy, don't silently pick a side
+## Base model — resolved (August 2026)
 
-Two different recommendations currently exist in the repo and have **not**
-been reconciled:
+This used to be a real discrepancy: `lora/README.md` and the training configs
+pointed at `OnomaAIResearch/Illustrious-xl-early-release-v0` while the v4
+candidate-generation notebook had moved to
+`OnomaAIResearch/Illustrious-XL-v2.0` (commit "Fixed single model for
+omuna"), with nothing written down explaining whether that split was
+intentional. It's been reconciled: **`OnomaAIResearch/Illustrious-XL-v2.0` is
+now the single canonical base for both candidate generation and LoRA
+training.** `lora/README.md`, `lora/configs/kohya_sdxl_lora_config.toml`, and
+`lora/configs/diffusers_train_command.sh` were updated to match; the v4
+notebook's `CONFIG` cell has a comment pointing back here.
 
-- `lora/README.md`, `lora/configs/kohya_sdxl_lora_config.toml`, and
-  `lora/configs/diffusers_train_command.sh` all point to
-  `OnomaAIResearch/Illustrious-xl-early-release-v0` as the LoRA training base,
-  with reasoning: it's a canonical, un-merged anime SDXL base, safer than
-  training on a heavily merged checkpoint. They also name
-  `Laxhar/noobai-XL-1.1` as an alternative, and explicitly warn against
-  training directly on merges like `John6666/prefect-illustrious-xl-v3-sdxl`.
-- The v4 candidate-generation notebook was recently changed (commit "Fixed
-  single model for omuna") to load `OnomaAIResearch/Illustrious-XL-v2.0` via
-  `from_single_file` — a different release than `early-release-v0`.
+Researched three current (August 2026) Hugging Face options before deciding —
+all unmerged, tag-trained, anime-focused SDXL checkpoints, consistent with the
+project's own rule against training on merges:
 
-This may be intentional (v2.0 for candidate generation, early-release-v0 for
-the actual LoRA base training run are different jobs), but it has not been
-written down as a deliberate decision anywhere. **If you touch base-model
-choice, either keep candidate-generation and LoRA-training aligned, or add a
-note here explaining why they're intentionally different.** Don't quietly
-"fix" one to match the other without checking with the user first.
+1. **`OnomaAIResearch/Illustrious-XL-v2.0` (chosen).** Onoma ships this file
+   specifically as the *untuned* base checkpoint — released because it "works
+   as a better merging/training base" than their aesthetic-tuned checkpoint,
+   i.e. it's a training base by design. Permissive license (MIT + CreativeML
+   Open RAIL++, no non-commercial clause). Native Illustrious tag
+   conditioning, so it required zero changes to the existing `STYLE_*` tag
+   bundles or dataset prose. It's also what the notebook already had working,
+   so choosing it collapsed a two-checkpoint pipeline into one. Caveat: ships
+   as a single ~6.94 GB safetensors file, not a Diffusers-format repo — Kohya
+   `sd-scripts` loads it natively, but the plain Diffusers training script
+   needs a one-time `from_single_file` → `save_pretrained()` conversion first
+   (documented inline in `lora/configs/diffusers_train_command.sh`).
+2. **`Laxhar/noobai-XL-Vpred-1.1` (alternative).** Community-ranked as the
+   strongest Illustrious-lineage model for tag comprehension and anatomy
+   accuracy (full Danbooru + e621 corpus). Not chosen because of two real
+   costs: its license (`fair-ai-public-license-1.0-sd`) explicitly forbids
+   commercialization, and it's a v-prediction model, which would require
+   reworking the scheduler config (zero-terminal-SNR, rescaled CFG) in both
+   `apply_scheduler()` in the notebook and the training configs — not a
+   drop-in swap.
+3. **`cagliostrolab/animagine-xl-4.0` (`-zero` variant, alternative).** Most
+   recent large non-merge anime SDXL finetune outside the Illustrious
+   lineage (8.4M images, Jan 2025 cutoff), and — like Illustrious — ships a
+   dedicated `-zero` pretrained checkpoint meant for LoRA training, separate
+   from its aesthetic-tuned release. Permissive license (CreativeML Open
+   RAIL++-M). Not chosen because its structured tag-ordering convention
+   (`1girl/1boy, character, series, rating, ...`) differs from the free-form
+   Illustrious-style tags already used throughout this repo — adopting it
+   would mean rewriting the tag bundles, not just the model ID.
+
+Pony Diffusion V6 XL was considered and rejected outright: its
+`score_9, score_8_up, ...` tag chain and mixed anime/cartoon/furry training
+data don't fit this project's cel-shaded, purely-anime grammar, and adopting
+it would mean redesigning the prompt architecture in
+`prompt-architecture.md`, not swapping a checkpoint.
+
+If a future change revisits this (e.g. going commercial-restricted for higher
+fidelity, or moving to a v-prediction pipeline), update this section, both
+`lora/configs/*`, `lora/README.md`, and the notebook's `CONFIG` cell comment
+together — don't let them drift again.
 
 ## Training config summary
 

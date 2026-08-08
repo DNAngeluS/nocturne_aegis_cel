@@ -12,13 +12,69 @@ This pack is a ready-to-use scaffold for creating the `nacel_v1` style LoRA. It 
 
 ## Recommended base model
 
-Primary recommendation: `OnomaAIResearch/Illustrious-xl-early-release-v0` or the closest official Illustrious XL v1.x checkpoint available in your trainer.
+Researched current Hugging Face options (August 2026) to settle on one canonical
+base shared by candidate generation and LoRA training — see
+`.agents/lora-training.md` for the full decision record. All three below are
+unmerged, checkpoint-native, anime-focused SDXL finetunes trained on tag-style
+captions, matching the tag-based prompt architecture already used in `src/`
+and this pack.
 
-Reason: Nocturne Aegis Cel depends on anime-native SDXL behavior, strong linework, glass-eye rendering, dramatic cel shading, and promptable fantasy/mechanical content. Illustrious XL is a canonical anime SDXL-family base and is less risky than training on a heavily merged checkpoint.
+### Primary recommendation: `OnomaAIResearch/Illustrious-XL-v2.0`
 
-Alternative for stronger modern anime output: `Laxhar/noobai-XL-1.1`. Use it if your target inference ecosystem is NoobAI/Illustrious merges and you accept its license/content-tag constraints.
+This is now the single base used for **both** candidate generation
+(`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb`) and LoRA
+training — no more split between "what generates candidates" and "what trains
+the LoRA."
 
-Avoid training the first official LoRA directly on merged checkpoints such as `John6666/prefect-illustrious-xl-v3-sdxl` or `John6666/hassaku-xl-illustrious-v31-sdxl`; they are useful for generating candidates, but merges can imprint extra style bias into the LoRA.
+- Onoma ships this specific file as the **untuned base checkpoint**, released
+  because it "works as a better merging/training base" than their
+  aesthetic-tuned checkpoint — it's a training base by design, not a repurposed
+  generation checkpoint.
+- License: MIT + CreativeML Open RAIL++ — permissive, no non-commercial
+  restriction.
+- Native Illustrious tag conditioning — no rework needed for the existing
+  `STYLE_*` tag bundles, `prompts/dataset_plan.csv` prose, or the configs in
+  `configs/`.
+- Ships as a single ~6.94 GB safetensors file, not a Diffusers-format repo.
+  Kohya's `sd-scripts` (`configs/kohya_sdxl_lora_config.toml`) loads that
+  natively. The Diffusers script (`configs/diffusers_train_command.sh`) needs
+  a one-time conversion step first — see the note in that file.
+
+### Alternative 1: `Laxhar/noobai-XL-Vpred-1.1`
+
+Community rankings consistently rate this as the strongest Illustrious-lineage
+model for raw tag comprehension and anatomy accuracy (full Danbooru + e621
+training corpus). Two real trade-offs before switching to it:
+
+- **License**: `fair-ai-public-license-1.0-sd` explicitly prohibits
+  commercialization of the model or derivative products. Only pick this if
+  the project stays non-commercial.
+- **Architecture**: it's v-prediction, not epsilon-prediction. Adopting it
+  means updating the scheduler config (zero-terminal-SNR, rescaled CFG) in
+  both the notebook's `apply_scheduler()` helper and the training configs —
+  not a drop-in model-ID swap.
+
+### Alternative 2: `cagliostrolab/animagine-xl-4.0` (`-zero` for training)
+
+The most recent large "clean" (non-merge) anime SDXL finetune outside the
+Illustrious lineage — 8.4M-image dataset, January 2025 cutoff. Like Illustrious,
+it ships a dedicated pretrained `-zero` checkpoint recommended for LoRA
+training, separate from the aesthetic-optimized release meant for direct
+generation. License is CreativeML Open RAIL++-M (permissive, commercial use
+allowed). Trade-off: a structured tag-ordering convention
+(`1girl/1boy, character, series, rating, ...`) different from the free-form
+Illustrious-style tags already in use here — adopting it means rewriting the
+tag bundles, not just swapping a model ID.
+
+**Considered and rejected:** Pony Diffusion V6 XL — its `score_9, score_8_up,
+...` quality-tag chain and mixed anime/cartoon/furry training data are a poor
+fit for this project's purely-anime, cel-shaded tag grammar; adopting it would
+mean redesigning the prompt architecture, not just picking a checkpoint.
+Community "daily driver" merges such as `John6666/prefect-illustrious-xl-v3-sdxl`,
+`John6666/hassaku-xl-illustrious-v31-sdxl`, and WAI-illustrious-SDXL were
+excluded on the same standing principle: they're useful for generating
+throwaway candidates, but merges can imprint extra, undocumented style bias
+into a LoRA trained on top of them.
 
 ## Important limitation
 

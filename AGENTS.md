@@ -25,9 +25,10 @@ When you change style tags, prompt content, captioning rules, or generation
 defaults, update every place that representation lives, not just the file you
 started in: the active notebook, its `PROMPTS_FILE` JSON, `lora/prompts/*`,
 and `lora/configs/*` as applicable. See `.agents/repo-notes.md` for the full
-checklist and current known gaps (e.g. base-model choice differs between the
-candidate-generation notebook and the LoRA training configs — don't silently
-reconcile it without checking first).
+checklist. The candidate-generation notebook and the LoRA training configs now
+share one canonical base model (`OnomaAIResearch/Illustrious-XL-v2.0`) — see
+`.agents/lora-training.md` for that decision and the alternatives considered
+before changing it again.
 
 ## Build, Test, and Development Commands
 

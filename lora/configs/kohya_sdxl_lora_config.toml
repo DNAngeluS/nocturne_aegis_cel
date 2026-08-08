@@ -1,7 +1,10 @@
 # Kohya SDXL LoRA starter config for nacel_v1
 # Update paths before running.
 
-pretrained_model_name_or_path = "OnomaAIResearch/Illustrious-xl-early-release-v0"
+# Canonical base model for this project (see lora/README.md and
+# .agents/lora-training.md for the decision + alternatives). Ships as a
+# single safetensors file, which sd-scripts loads natively here.
+pretrained_model_name_or_path = "OnomaAIResearch/Illustrious-XL-v2.0"
 output_name = "nacel_v1_illustriousxl_style_lora"
 output_dir = "./output"
 train_data_dir = "./dataset_final"

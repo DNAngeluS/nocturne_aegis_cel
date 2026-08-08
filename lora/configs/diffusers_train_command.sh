@@ -4,8 +4,25 @@ set -euo pipefail
 # Diffusers SDXL LoRA starter command for nacel_v1.
 # Requires a dataset folder or HF dataset with image/caption fields.
 # Update MODEL_NAME, DATASET_DIR, and OUTPUT_DIR before running.
+#
+# Canonical base model for this project (see lora/README.md and
+# .agents/lora-training.md for the decision + alternatives). NOTE:
+# OnomaAIResearch/Illustrious-XL-v2.0 ships as a single safetensors file, not
+# a Diffusers-format repo. train_text_to_image_lora_sdxl.py loads
+# MODEL_NAME via StableDiffusionXLPipeline.from_pretrained(), which expects a
+# Diffusers folder layout, so convert once before running this script:
+#   python -c "
+#   from diffusers import StableDiffusionXLPipeline
+#   import torch
+#   pipe = StableDiffusionXLPipeline.from_single_file(
+#       'Illustrious-XL-v2.0.safetensors', torch_dtype=torch.float16)
+#   pipe.save_pretrained('./illustrious_xl_v2_diffusers')
+#   "
+# then point MODEL_NAME at that local folder. Alternatively, use Kohya's
+# sd-scripts (configs/kohya_sdxl_lora_config.toml), which loads the
+# single-file checkpoint natively with no conversion step.
 
-MODEL_NAME="OnomaAIResearch/Illustrious-xl-early-release-v0"
+MODEL_NAME="OnomaAIResearch/Illustrious-XL-v2.0"
 DATASET_DIR="./dataset_final"
 OUTPUT_DIR="./nacel_v1_illustriousxl_lora"
 
