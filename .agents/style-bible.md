@@ -3,7 +3,7 @@
 Canonical visual grammar for the `Nocturne Aegis Cel` style. This is the source
 of truth for any prompt, tag bundle, or style description written anywhere in
 the repo. It is compiled from `lora/prompts/dataset_plan.csv` (prose form) and
-`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb` (tag-bundle form)
+`src/nocturne_aegis_gen.ipynb` (tag-bundle form)
 — the two representations currently in the repo. Keep both in sync with this
 file when the style evolves.
 
@@ -99,7 +99,7 @@ Consistently blocked across prompt files and captions:
    written for natural-language-capable checkpoints. This is the style
    described in human-readable form and is the best single reference if you
    need to explain the style to someone.
-2. **Tag-bundle form** (`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb`,
+2. **Tag-bundle form** (`src/nocturne_aegis_gen.ipynb`,
    `QUALITY_TAGS` / `STYLE_ANATOMY_TAGS` / `STYLE_RENDER_TAGS` /
    `STYLE_MATERIAL_TAGS` / `STYLE_COMPOSITION_TAGS`): the same grammar
    compressed into short comma-separated tags for `Illustrious v0.1`-family

@@ -26,8 +26,8 @@ The style memory and prompt rules live in `.memory/` and should be treated as ca
 
 ## Main Components
 
-- `src/nocturne_aegis_candidate_generator_v3.ipynb`: main SDXL candidate generation notebook.
-- `data/prompts_illustrious_v3.json`: prompt source used by the generator.
+- `src/nocturne_aegis_gen.ipynb`: the active SDXL candidate generation notebook. Iterated in place — see `src/CHANGELOG.md` for its history, including the superseded `v1`-`v4` notebooks kept in `src/` as reference.
+- `src/prompts_illustrious_v4_tag_iteration.json`: prompt source used by the generator.
 - `lora/`: LoRA training pack, configs, prompts, captions, and tooling.
 - `.memory/`: project memory, style bible, plan, and master prompting documents.
 

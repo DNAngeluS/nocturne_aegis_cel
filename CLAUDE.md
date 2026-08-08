@@ -48,20 +48,24 @@ notebook-only edit as done.
 
 ## Orientation
 
-- `src/nocturne_aegis_candidate_generator_v4_definitive.ipynb` — **the active
-  notebook.** v1-v3 in the same directory are superseded history; don't fork
-  new work from them without reason (full rationale in
-  `.agents/prompt-architecture.md`).
-- `src/prompts_illustrious_v4_tag_iteration.json` — the prompt file the v4
+- `src/nocturne_aegis_gen.ipynb` — **the active notebook**, iterated in place.
+  There is no more one-file-per-version scheme: log changes in
+  `src/CHANGELOG.md` (new entry at the top) and mirror a condensed version
+  into the notebook's own "Changelog Summary" cell at the end. `v1`-`v4` in
+  the same directory are superseded history; don't fork new work from them
+  without reason (full rationale in `.agents/prompt-architecture.md` and
+  `src/CHANGELOG.md`).
+- `src/prompts_illustrious_v4_tag_iteration.json` — the prompt file the
   notebook currently loads (check its `CONFIG` cell's `PROMPTS_FILE` before
-  assuming this is still current).
+  assuming this is still current; the filename kept its `v4` tag because it's
+  dataset content, not a notebook version marker).
 - `lora/` — training pack: `configs/` (Kohya + Diffusers starters),
   `prompts/` (`dataset_plan.csv`, `validation_prompts.txt`), `captions/`,
   `dataset_seed/` (single seed image — do not treat as a template to repeat),
   `tools/audit_sheet.csv` (curation rubric).
-- `requirements.txt` — local venv deps. The v4 notebook pins slightly
-  different Colab-specific versions in its first cell; that's intentional,
-  see `.agents/repo-notes.md`.
+- `requirements.txt` — local venv deps. The notebook pins slightly different
+  Colab-specific versions in its first cell; that's intentional, see
+  `.agents/repo-notes.md`.
 - `.env.example` — `HF_TOKEN` / `HUGGINGFACEHUB_API_TOKEN` template. Never
   commit a real token.
 

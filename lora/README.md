@@ -22,9 +22,9 @@ and this pack.
 ### Primary recommendation: `OnomaAIResearch/Illustrious-XL-v2.0`
 
 This is now the single base used for **both** candidate generation
-(`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb`) and LoRA
-training — no more split between "what generates candidates" and "what trains
-the LoRA."
+(`src/nocturne_aegis_gen.ipynb`, the active notebook — see
+`src/CHANGELOG.md`) and LoRA training — no more split between "what generates
+candidates" and "what trains the LoRA."
 
 - Onoma ships this specific file as the **untuned base checkpoint**, released
   because it "works as a better merging/training base" than their

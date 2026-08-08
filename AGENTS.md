@@ -4,10 +4,10 @@
 
 This repository defines the `Nocturne Aegis Cel` style system and the tooling needed to generate a curated LoRA dataset and then train the LoRA itself. The intended end-to-end workflow is Google Colab first: use Colab to run candidate generation, curate and caption the resulting training images, and then use Colab or equivalent GPU hardware to train the final LoRA.
 
-- `src/nocturne_aegis_candidate_generator_v3.ipynb`: main SDXL candidate generation notebook.
+- `src/nocturne_aegis_gen.ipynb`: the active SDXL candidate generation notebook, iterated in place. `src/CHANGELOG.md` is the running log of changes to it (and recompiles the history of the superseded `v1`-`v4` notebooks also kept in `src/`).
 - `requirements.txt`: Python dependencies for generation and training utilities.
-- `data/prompts_illustrious_v3.json`: prompt data used by the generator.
-- `data/previous/`: archived earlier project packs; treat as reference material, not active source.
+- `src/prompts_illustrious_v4_tag_iteration.json`: prompt data used by the generator.
+- `data/`: gitignored; not present in a fresh checkout. Do not assume it exists (see `.agents/repo-notes.md`).
 - `lora/`: LoRA training pack, including `configs/`, `prompts/`, `captions/`, `dataset_seed/`, and `tools/`.
 - `.memory/`: referenced historically as project memory and style-definition documents, but this directory is gitignored and not present in a fresh checkout. Do not assume it exists.
 - `.agents/`: the actual tracked repository memory. `README.md` there indexes it; `style-bible.md`, `prompt-architecture.md`, `lora-training.md`, and `repo-notes.md` are the canonical source for style rules, prompting technique, LoRA workflow, and known repo discrepancies. Read before non-trivial changes to prompts, style tags, captions, or training configs.
@@ -40,7 +40,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Preferred workflow: open `src/nocturne_aegis_candidate_generator_v3.ipynb` in Google Colab and execute cells top to bottom. Local Jupyter is acceptable for development, but Colab is the primary target environment for both image generation and final LoRA training.
+Preferred workflow: open `src/nocturne_aegis_gen.ipynb` in Google Colab and execute cells top to bottom. Local Jupyter is acceptable for development, but Colab is the primary target environment for both image generation and final LoRA training.
 
 For a smoke test, use `NUM_IMAGES_PER_PROMPT = 2`, `NUM_INFERENCE_STEPS = 38`, `GUIDANCE_SCALE = 7.0`, and `CLIP_SKIP = 2`.
 

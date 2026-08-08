@@ -7,7 +7,8 @@ training.
 
 ## Pipeline
 
-1. Generate a broad candidate pool in Colab (`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb`).
+1. Generate a broad candidate pool in Colab (`src/nocturne_aegis_gen.ipynb`,
+   the active notebook — see `src/CHANGELOG.md` for its iteration history).
 2. Audit for style fidelity and reject weak candidates
    (`lora/tools/audit_sheet.csv`).
 3. Select the clean training subset — target **24-30 final images**.

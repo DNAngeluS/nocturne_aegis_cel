@@ -21,18 +21,21 @@ things that were deliberately gitignored.
   files actually live in `src/` (`src/prompts_illustrious_v3.json`,
   `src/prompts_illustrious_v4_iteration.json`,
   `src/prompts_illustrious_v4_tag_iteration.json`). Use the `src/` paths.
-- **Main notebook version** — `README.md`'s "Main Components" section still
-  calls `nocturne_aegis_candidate_generator_v3.ipynb` the "main SDXL candidate
-  generation notebook." Per git history and `.agents/prompt-architecture.md`,
-  **v4 (`_definitive`) is now the active one** and is under recent, ongoing
-  edits. v3 is retained as history.
+- **Main notebook version — resolved.** `README.md` and `AGENTS.md` used to
+  point at `nocturne_aegis_candidate_generator_v3.ipynb` (later `v4`) as the
+  "main" notebook; both were updated (2026-08-08) to point at
+  `src/nocturne_aegis_gen.ipynb`, the current active notebook. See
+  `src/CHANGELOG.md` for why the file-per-version scheme was retired in favor
+  of one notebook iterated in place plus a changelog. `v1`-`v4` remain in
+  `src/` as historical reference only.
 - **`.codex`** — empty file at repo root, no documented purpose. Leave as-is
   unless the user explains what it's for.
 
-If you're doing a cleanup pass, it's reasonable to update `README.md`/
-`AGENTS.md` text to match reality (point at `src/` and v4, and at `.agents/`
-instead of `.memory/`) — but confirm with the user before rewriting their
-existing docs wholesale, since `.memory/` may still exist on their own
+The `.memory/` mismatch above is still open — that one hasn't been fixed in
+`README.md`/`AGENTS.md` yet. If you do a cleanup pass on it, it's reasonable
+to update the remaining `.memory/` references to point at `.agents/` instead
+— but confirm with the user before rewriting their existing docs wholesale,
+since `.memory/` may still exist on their own
 machine outside this checkout.
 
 ## Local vs. Colab — the parity rule
@@ -58,7 +61,9 @@ defaults, treat it as one logical change that must land in every place that
 representation exists, not just the notebook cell you happened to edit.**
 Concretely, check all of:
 
-- the active notebook (`src/nocturne_aegis_candidate_generator_v4_definitive.ipynb`)
+- the active notebook (`src/nocturne_aegis_gen.ipynb`) — and a matching entry
+  in `src/CHANGELOG.md` (plus its condensed mirror in the notebook's own
+  "Changelog Summary" cell) for any change worth remembering
 - whichever prompt JSON file `PROMPTS_FILE` points to in that notebook's
   `CONFIG` cell (currently `src/prompts_illustrious_v4_tag_iteration.json`)
 - `lora/prompts/dataset_plan.csv` and `lora/prompts/validation_prompts.txt` if
