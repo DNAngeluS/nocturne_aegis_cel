@@ -20,6 +20,28 @@ file when the style evolves.
   exists — the base checkpoint doesn't know that token and it will just add
   noise. Use the tag/prose grammar below instead.
 
+## Where the grammar came from (and why artist names are banned)
+
+The style is a deliberate synthesis of five influences, each contributing one
+axis. This provenance lives in `.memory/Nocturne_Aegis_Cel_Reference.md`
+(gitignored; see `local-context.md`) and is recorded here because it explains
+*why* each mechanical tag exists — useful when deciding whether a proposed tag
+change is faithful or drift.
+
+| Influence | Contributes | Mechanical vocabulary it became |
+|---|---|---|
+| CLAMP (*Magic Knight Rayearth*) | proportions & ornamentation | elongated limbs, 8-head ratio, baroque filigree, hair as compositional framing, shaped negative space |
+| Rui Araizumi (*Slayers*) | expressive geometry & eyes | 90s cel structure, angular jaw, gemstone/glass eyes with large catchlights, thick confident outlines |
+| Yoshiyuki Sadamoto (*Evangelion*) | somatic realism & mood | fragile anatomical tension, melancholic micro-expression, cinematic isolation, realistic fabric drapery |
+| Masami Kurumada (*B't X*) | metallic texture & kinetics | iridescent/anisotropic metal, burnished chrome, deep ink recesses, hard-edged impact bursts |
+| abec / BUNBUN (*Sword Art Online*) | volumetric shading & light | layered 1/2/3 shadow system, ambient occlusion, rim light, digital gradient maps, specular eye refraction |
+
+The whole point of the translation is that naming these artists in a prompt
+produces a homogenized average (and trips brand filters); naming the
+*mechanics* produces something original. **A tag that can't be traced to a
+mechanic — "masterpiece, 8k", "in the style of X" — isn't style definition and
+doesn't belong in the grammar.**
+
 ## Anatomy & Face
 
 - Elongated, elegant proportions "where applicable" (not forced on every
@@ -44,9 +66,32 @@ file when the style evolves.
 
 - Jewel tones: blackened indigo, violet, magenta, sapphire.
 - Accents: antique gold, pale silver.
+- High-contrast **flat color blocking underneath** the volumetric shading —
+  the flat base is what keeps it cel rather than painterly.
 - Material separation is a hard requirement: matte cloth vs. iridescent
   metal vs. burnished chrome (with micro-scratches) vs. glass must all read as
   visually distinct surfaces in the same image.
+- Skin: soft diffuse subsurface glow. Cloth: matte, velvet-like light
+  absorption. Energy effects: hard-edged cel-shaded bursts, **never** blurry
+  neon fog.
+
+### Sanctioned palette variants
+
+The default is not the only legal palette. These four variants are part of the
+style system and are a legitimate tool for keeping a dataset from collapsing
+into monochrome-violet sameness:
+
+| Variant | Colors |
+|---|---|
+| default | blackened indigo, violet, magenta, sapphire, antique gold, pale silver |
+| eclipse crimson | black, wine red, gold, violet shadow |
+| frost sapphire | navy, sapphire, silver, pale cyan rim light |
+| emerald relic | black-green, emerald, antique gold, violet undertone |
+| rose obsidian | black, rose magenta, pale gold, blue-violet shadow |
+
+Only the default is currently encoded in the notebook's `STYLE_MATERIAL_TAGS`.
+If you add a variant to a prompt set, keep the rest of the grammar (linework,
+shadow system, materials) unchanged — palette is the only axis that moves.
 
 ## Composition
 
@@ -55,7 +100,21 @@ file when the style evolves.
 - Ornamental restraint — detail should be hierarchical, not uniform noise.
 - Arc composition; hair framing; cable framing; energy arcs as recurring
   compositional devices.
-- Controlled detail hierarchy (foreground detail > background detail).
+- Negative space is **shaped deliberately**, not left empty.
+- Vertical gothic/futuristic framing whenever architecture is in shot.
+
+### The detail hierarchy (explicit order)
+
+"Hyper-detailed" is a failure mode here, not a goal — uniform detail is what
+makes output read as noise. Detail is spent in this order:
+
+1. face, eyes, hands, silhouette
+2. costume, armor, weapon, hair
+3. background architecture
+4. particles and effects
+
+Background detail must never compete with the face. This ordering is also a
+rejection criterion during audit.
 
 ## Diversity requirement (do not collapse the dataset)
 
@@ -109,6 +168,14 @@ Consistently blocked across prompt files and captions:
 
 If you change the style grammar, update **both** representations, plus the
 LoRA caption negative list in `lora/prompts/dataset_plan.csv`.
+
+## This is a spec, not a description of current output
+
+The pipeline doesn't hit this yet — best output so far is coherent but
+stylistically generic (`generation-runs.md`), and the one image that does
+embody the style (`lora/dataset_seed/0001_nocturne_reference.png`) came from
+ChatGPT's image tool rather than this repo's checkpoint. Score candidates
+against the spec above, not against what the pipeline currently manages.
 
 ## Captioning — separate from generation prompting
 

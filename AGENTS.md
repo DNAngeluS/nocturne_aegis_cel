@@ -7,10 +7,11 @@ This repository defines the `Nocturne Aegis Cel` style system and the tooling ne
 - `src/nocturne_aegis_gen.ipynb`: the active SDXL candidate generation notebook, iterated in place. `src/CHANGELOG.md` is the running log of changes to it (and recompiles the history of the superseded `v1`-`v4` notebooks also kept in `src/`).
 - `requirements.txt`: Python dependencies for generation and training utilities.
 - `src/prompts_illustrious_v4_tag_iteration.json`: prompt data used by the generator.
-- `data/`: gitignored; not present in a fresh checkout. Do not assume it exists (see `.agents/repo-notes.md`).
+- `data/`: gitignored archive of superseded prompt sets and earlier project packs. Present on the author's machine, absent from a fresh clone — don't assume it exists, and don't source live prompts from it (see `.agents/local-context.md`).
 - `lora/`: LoRA training pack, including `configs/`, `prompts/`, `captions/`, `dataset_seed/`, and `tools/`.
-- `.memory/`: referenced historically as project memory and style-definition documents, but this directory is gitignored and not present in a fresh checkout. Do not assume it exists.
-- `.agents/`: the actual tracked repository memory. `README.md` there indexes it; `style-bible.md`, `prompt-architecture.md`, `lora-training.md`, and `repo-notes.md` are the canonical source for style rules, prompting technique, LoRA workflow, and known repo discrepancies. Read before non-trivial changes to prompts, style tags, captions, or training configs.
+- `.memory/`: the author's local design documents (style bible, plan, research report, Custom GPT instructions). Gitignored, so absent from a fresh clone; its content has been distilled into `.agents/` — see `.agents/local-context.md` for the mapping.
+- `output/`: gitignored local generation runs. Findings worth keeping are summarized in `.agents/generation-runs.md`.
+- `.agents/`: the tracked repository memory, and the canonical source for style rules, prompting technique, and LoRA workflow. `README.md` there indexes it: `style-bible.md`, `prompt-architecture.md`, `lora-training.md`, `generation-runs.md`, `img2img-workflow.md`, `custom-gpt.md`, `local-context.md`, `repo-notes.md`. Read before non-trivial changes to prompts, style tags, captions, or training configs.
 
 Keep generated images, model files, and transient training outputs out of source directories unless they are intentional seed/reference assets.
 
@@ -42,7 +43,7 @@ pip install -r requirements.txt
 
 Preferred workflow: open `src/nocturne_aegis_gen.ipynb` in Google Colab and execute cells top to bottom. Local Jupyter is acceptable for development, but Colab is the primary target environment for both image generation and final LoRA training.
 
-For a smoke test, use `NUM_IMAGES_PER_PROMPT = 2`, `NUM_INFERENCE_STEPS = 38`, `GUIDANCE_SCALE = 7.0`, and `CLIP_SKIP = 2`.
+For a smoke test, use `NUM_IMAGES_PER_PROMPT = 1-2`, `NUM_INFERENCE_STEPS = 24-28`, `GUIDANCE_SCALE = 6.0-6.5`, and `CLIP_SKIP = None` — the notebook's current defaults, and inside Onoma's recommended range for this checkpoint. (An older 38 / 7.0 / CLIP_SKIP 2 recommendation predates the current base model and produced unusable output; see `.agents/generation-runs.md`.)
 
 LoRA training starters live in `lora/configs/`:
 
@@ -80,12 +81,12 @@ When changing notebook or prompt logic, prefer validation in the same environmen
 
 ## Commit & Pull Request Guidelines
 
-This checkout has no accessible Git history, so no project-specific commit convention can be inferred. Use concise imperative commits, such as `Update LoRA validation prompts` or `Tune candidate generator settings`.
+Commit history uses short, plain-imperative subjects with no strict convention (e.g. "Redefined the style prompt", "Added a refiner + upscaler step"). Match that rather than introducing Conventional Commits. Examples: `Update LoRA validation prompts`, `Tune candidate generator settings`.
 
 Pull requests should include a summary, affected paths, validation performed, and screenshots/contact sheets when image output changes. Link related issues or experiments, and call out model, seed, and hardware changes that affect reproducibility.
 
 ## Security & Configuration Tips
 
-Do not commit Hugging Face tokens, private model credentials, or local absolute paths. Keep large checkpoints and generated training runs outside the repository or in ignored artifact storage.
+Do not commit Hugging Face tokens, private model credentials, or local absolute paths. Keep large checkpoints and generated training runs outside the repository or in ignored artifact storage. `.env` (real token) and `.env.example` (template) are the only intended homes for credentials — never hardcode a token in a script or notebook cell, even commented out.
 
 For Colab-oriented workflows, keep Drive mount points, secrets, and temporary runtime paths configurable and out of committed files.

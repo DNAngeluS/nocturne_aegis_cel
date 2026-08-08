@@ -22,28 +22,27 @@ This is not just a generic SDXL image notebook. It is a style-construction and L
 - Visual direction: 1990s cel-animation skeleton plus modern volumetric digital finish
 - Prompting rule: use technical visual language, not artist-name invocations
 
-The style memory and prompt rules live in `.memory/` and should be treated as canonical project context.
+The style memory and prompt rules live in `.agents/` (tracked) — start at `.agents/README.md`. A local, gitignored `.memory/` folder holds the original design documents those were distilled from; it is not part of a clone.
 
 ## Main Components
 
 - `src/nocturne_aegis_gen.ipynb`: the active SDXL candidate generation notebook. Iterated in place — see `src/CHANGELOG.md` for its history, including the superseded `v1`-`v4` notebooks kept in `src/` as reference.
 - `src/prompts_illustrious_v4_tag_iteration.json`: prompt source used by the generator.
 - `lora/`: LoRA training pack, configs, prompts, captions, and tooling.
-- `.memory/`: project memory, style bible, plan, and master prompting documents.
+- `.agents/`: repository memory — style bible, prompt architecture, LoRA workflow, run findings.
 
-## Candidate Generator v3
+## Candidate Generator
 
-The current notebook version fixes the CLIP 77-token truncation problem seen in v2.
+Base model: `OnomaAIResearch/Illustrious-XL-v2.0` (MIT + CreativeML Open RAIL++), used for both candidate generation and LoRA training.
 
-Main changes:
-- Uses StableDiffusionXLPipeline.
-- Keeps prompt and prompt_2 under CLIP token limits.
-- Uses concise Illustrious/Kohaku-style tags instead of long prose.
-- Adds token counting before generation.
-- Uses prompt_2 for compact style conditioning.
-- Adds compact negative prompts that block sketch, monochrome, lineart-only, and unfinished outputs.
-- Uses aspect-aware resolutions.
-- Saves PNG images, matching LoRA captions, metadata CSV/JSONL, contact sheet, and a ZIP archive.
+What the notebook does:
+- Uses `StableDiffusionXLPipeline`, loading the checkpoint from a single safetensors file.
+- Uses concise Illustrious-style tags rather than long prose.
+- Splits the style grammar across `prompt` and `prompt_2` to stay under the CLIP 77-token limit, counting tokens and failing fast on overflow.
+- Applies compact negative prompts blocking sketch, monochrome, lineart-only, and unfinished output.
+- Uses aspect-aware resolutions (portrait / full body / wide / square).
+- Saves PNGs, matching LoRA captions, metadata CSV/JSONL, a contact sheet, and a ZIP archive.
+- Has optional refiner and 4x upscaler stages, both off by default.
 
 ## Recommended Workflow
 
@@ -51,16 +50,17 @@ Preferred environment: Google Colab.
 
 Before loading gated or frequently requested Hugging Face models in Colab, set `HF_TOKEN` in Colab Secrets or as an environment variable so downloads are authenticated and less likely to hit anonymous rate limits.
 
-Recommended first smoke test:
-- NUM_IMAGES_PER_PROMPT = 2
-- NUM_INFERENCE_STEPS = 38
-- GUIDANCE_SCALE = 7.0
-- CLIP_SKIP = 2
+Recommended first smoke test (the notebook's defaults):
+- NUM_IMAGES_PER_PROMPT = 1
+- NUM_INFERENCE_STEPS = 28
+- GUIDANCE_SCALE = 6.5
+- CLIP_SKIP = None
 
-If output remains sketchy:
-- Increase GUIDANCE_SCALE to 7.5
-- Keep negative prompt compact
-- Do not use long prose prompts over 77 CLIP tokens
+If output drifts off-style:
+- Keep prompts in tag form and the negative prompt compact.
+- Never exceed 77 CLIP tokens per channel.
+- Keep genre/subject nouns out of `prompt_2` — it steers subject, not just style.
+- If images stay incoherent after tag and step tuning, stop tuning prompts and treat it as a pipeline problem (refiner stage, or a different checkpoint).
 
 ## LoRA Dataset Rules
 

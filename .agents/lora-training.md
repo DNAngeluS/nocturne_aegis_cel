@@ -60,6 +60,27 @@ to armored warriors regardless of prompt content, that's a sign the dataset
 collapsed (see the diversity requirement in `style-bible.md`) and the LoRA
 overfit to the seed composition.
 
+## Candidate pool sizing and balance targets
+
+Not yet reflected anywhere in the repo's own files, but this is the plan the
+dataset was designed around:
+
+- Generate **80-120 candidates**, keep the best **24-30**. The current run
+  history is 3 candidates generated, 0 accepted (`generation-runs.md`) — the
+  pool phase has effectively not started.
+- Selection rule, stated plainly: *only train on images that are both beautiful
+  and structurally clean.* One flaw is a reject, not a "maybe".
+- **Lighting balance** across the final set — roughly a third each:
+  neutral/readable-form lighting, extreme chiaroscuro, backlit rim-light and
+  atmospheric. A set that's all chiaroscuro teaches the LoRA "dark", not the
+  shadow system.
+- Subject diversity is a hard requirement, not a nicety: women, men, and
+  androgynous adults; short/long/tied hair and helmets; armored, unarmored,
+  cloth-heavy, pilot suits, ceremonial; humans, androids, masked figures,
+  creatures, vehicles, weapons; ruins, interiors, skies, temples, cities,
+  forests, void backgrounds; calm, walking, combat, seated, profile.
+  (Adults only — no minors in the dataset.)
+
 ## Audit sheet (`lora/tools/audit_sheet.csv`)
 
 Header only today (no scored rows yet). Columns, each scored 0-3:
@@ -68,6 +89,19 @@ Header only today (no scored rows yet). Columns, each scored 0-3:
 `composition_mood`, `artifact_hygiene`, plus `total`, `recommendation`,
 `notes`. Use this rubric — not ad hoc judgment — when auditing a generation
 batch for the training subset.
+
+**Acceptance threshold: 21/24.** The CSV doesn't state it; it comes from the
+upstream Custom GPT's audit mode (`custom-gpt.md`), which is where the rubric
+originated. Score, total, then accept only ≥ 21 — that's the mechanism that
+enforces "beautiful *and* structurally clean" instead of letting a pretty
+image with melted hands through.
+
+Explicit reject triggers (any one is disqualifying): malformed hands or extra
+fingers; unreadable face or eyes; distorted anatomy; melted armor or fused
+objects; text/logo/watermark/signature; excessive visual noise; generic-anime
+drift; photorealistic drift; overfitted purple-warrior sameness; background
+detail overpowering the subject; weak linework hierarchy; no clear ambient
+occlusion or contact shadows.
 
 ## Seed reference (`lora/dataset_seed/`)
 
@@ -79,63 +113,31 @@ batch for the training subset.
   to "long-haired armored woman, sword, violet ruins." Treat it as one seed
   data point among 24-30, not a template.
 
-## Base model — resolved (August 2026)
+## Base model
 
-This used to be a real discrepancy: `lora/README.md` and the training configs
-pointed at `OnomaAIResearch/Illustrious-xl-early-release-v0` while the v4
-candidate-generation notebook had moved to
-`OnomaAIResearch/Illustrious-XL-v2.0` (commit "Fixed single model for
-omuna"), with nothing written down explaining whether that split was
-intentional. It's been reconciled: **`OnomaAIResearch/Illustrious-XL-v2.0` is
-now the single canonical base for both candidate generation and LoRA
-training.** `lora/README.md`, `lora/configs/kohya_sdxl_lora_config.toml`, and
-`lora/configs/diffusers_train_command.sh` were updated to match; the v4
-notebook's `CONFIG` cell has a comment pointing back here.
+**`OnomaAIResearch/Illustrious-XL-v2.0` — the single canonical base for both
+candidate generation and LoRA training.** Settled; not an open question.
+`lora/README.md`, both `lora/configs/*`, and the notebook's `CONFIG` cell all
+point at it.
 
-Researched three current (August 2026) Hugging Face options before deciding —
-all unmerged, tag-trained, anime-focused SDXL checkpoints, consistent with the
-project's own rule against training on merges:
+Why it fits: Onoma ships it as the *untuned* training base, it speaks the
+free-form Illustrious tag conditioning the `STYLE_*` bundles already use, and
+its license is permissive (MIT + CreativeML Open RAIL++), so `nacel_v1` comes
+out unencumbered.
 
-1. **`OnomaAIResearch/Illustrious-XL-v2.0` (chosen).** Onoma ships this file
-   specifically as the *untuned* base checkpoint — released because it "works
-   as a better merging/training base" than their aesthetic-tuned checkpoint,
-   i.e. it's a training base by design. Permissive license (MIT + CreativeML
-   Open RAIL++, no non-commercial clause). Native Illustrious tag
-   conditioning, so it required zero changes to the existing `STYLE_*` tag
-   bundles or dataset prose. It's also what the notebook already had working,
-   so choosing it collapsed a two-checkpoint pipeline into one. Caveat: ships
-   as a single ~6.94 GB safetensors file, not a Diffusers-format repo — Kohya
-   `sd-scripts` loads it natively, but the plain Diffusers training script
-   needs a one-time `from_single_file` → `save_pretrained()` conversion first
-   (documented inline in `lora/configs/diffusers_train_command.sh`).
-2. **`Laxhar/noobai-XL-Vpred-1.1` (alternative).** Community-ranked as the
-   strongest Illustrious-lineage model for tag comprehension and anatomy
-   accuracy (full Danbooru + e621 corpus). Not chosen because of two real
-   costs: its license (`fair-ai-public-license-1.0-sd`) explicitly forbids
-   commercialization, and it's a v-prediction model, which would require
-   reworking the scheduler config (zero-terminal-SNR, rescaled CFG) in both
-   `apply_scheduler()` in the notebook and the training configs — not a
-   drop-in swap.
-3. **`cagliostrolab/animagine-xl-4.0` (`-zero` variant, alternative).** Most
-   recent large non-merge anime SDXL finetune outside the Illustrious
-   lineage (8.4M images, Jan 2025 cutoff), and — like Illustrious — ships a
-   dedicated `-zero` pretrained checkpoint meant for LoRA training, separate
-   from its aesthetic-tuned release. Permissive license (CreativeML Open
-   RAIL++-M). Not chosen because its structured tag-ordering convention
-   (`1girl/1boy, character, series, rating, ...`) differs from the free-form
-   Illustrious-style tags already used throughout this repo — adopting it
-   would mean rewriting the tag bundles, not just the model ID.
+One operational caveat: it ships as a single ~6.94 GB safetensors file, not a
+Diffusers-format repo. Kohya `sd-scripts` loads it natively; the plain
+Diffusers training script needs a one-time `from_single_file` →
+`save_pretrained()` conversion first (documented inline in
+`lora/configs/diffusers_train_command.sh`).
 
-Pony Diffusion V6 XL was considered and rejected outright: its
-`score_9, score_8_up, ...` tag chain and mixed anime/cartoon/furry training
-data don't fit this project's cel-shaded, purely-anime grammar, and adopting
-it would mean redesigning the prompt architecture in
-`prompt-architecture.md`, not swapping a checkpoint.
-
-If a future change revisits this (e.g. going commercial-restricted for higher
-fidelity, or moving to a v-prediction pipeline), update this section, both
-`lora/configs/*`, `lora/README.md`, and the notebook's `CONFIG` cell comment
-together — don't let them drift again.
+Alternatives were surveyed once (NoobAI v-pred, Animagine XL 4.0-zero, Pony V6)
+and none justified the switch — each would mean reworking the scheduler config
+or rewriting the tag bundles, and some carry `fair-ai-public-license-1.0-sd`,
+which would force the LoRA open-source and bar closed-source monetization.
+Don't relitigate without a concrete reason; if you ever do swap the base, check
+the license first and update `lora/configs/*`, `lora/README.md`, and the
+notebook `CONFIG` comment together.
 
 ## Training config summary
 

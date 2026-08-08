@@ -7,20 +7,29 @@ things that were deliberately gitignored.
 
 ## Structure claims that don't match this checkout
 
-- **`.memory/`** — `README.md` and `AGENTS.md` both call this "the canonical
-  source for project intent, style rules, captioning constraints, and the
-  planned LoRA workflow." It does not exist in this checkout and is listed in
-  `.gitignore`. It was likely a local-only working folder for the original
-  author (`DNAngeluS`) that was never committed. **This `.agents/` directory
-  is the tracked replacement** — treat it as canonical instead, and treat the
-  `.memory/` references in `README.md`/`AGENTS.md` as stale until/unless that
-  directory reappears.
-- **`data/`** — `AGENTS.md` describes `data/prompts_illustrious_v3.json` and
-  `data/previous/` (archived earlier project packs). Neither exists; `data/`
-  is gitignored (presumably for generated/large content) and prompt JSON
-  files actually live in `src/` (`src/prompts_illustrious_v3.json`,
+- **`.memory/` — resolved (2026-08-08).** Earlier versions of this file said
+  it "does not exist." **That was wrong.** It exists on the author's machine
+  and is `.gitignore`d, so it is absent from a fresh clone and invisible to any
+  agent without local filesystem access. It has now been read and distilled
+  into `.agents/`. Its contents and the mapping to tracked files are in
+  `local-context.md`. Practical rule unchanged: **`.agents/` is canonical for
+  agents** (it's the part that survives a clone), `.memory/` is the authoring
+  source behind it. The `README.md`/`AGENTS.md` wording has been corrected to
+  say "gitignored, may exist locally" rather than "not present".
+- **`data/` — resolved (2026-08-08).** Same correction: it exists locally and
+  is gitignored, and it does contain `prompts_illustrious_v3.json` and
+  `previous/` (the archived ChatGPT project packs) as `AGENTS.md` originally
+  described. But those are **history**, not the active path — the live prompt
+  JSONs are the `src/` copies (`src/prompts_illustrious_v3.json`,
   `src/prompts_illustrious_v4_iteration.json`,
   `src/prompts_illustrious_v4_tag_iteration.json`). Use the `src/` paths.
+  Inventory in `local-context.md`, including a plaintext-credential finding in
+  `data/test.py` that needs the user's attention.
+- **`output/`** — also gitignored and present locally: three real generation
+  runs (images, metadata CSV/JSONL, contact sheets, archives). This is the
+  project's only empirical evidence and it is analyzed in `generation-runs.md`.
+  Note the notebook writes to `outputs/` (plural) while these landed in
+  `output/` (singular); both are ignored, so neither is at risk of commit.
 - **Main notebook version — resolved.** `README.md` and `AGENTS.md` used to
   point at `nocturne_aegis_candidate_generator_v3.ipynb` (later `v4`) as the
   "main" notebook; both were updated (2026-08-08) to point at

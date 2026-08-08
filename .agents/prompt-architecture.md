@@ -5,6 +5,38 @@ candidate-generator notebook has gone through four versions. Read
 `style-bible.md` first for *what* the style is; this file is about *how* it
 gets fed to the model.
 
+## The six-element architecture (the underlying design)
+
+Before any of the SDXL-specific mechanics below, the project's prompts are
+built on a fixed six-element structure from
+`.memory/Nocturne_Aegis_Cel_Reference.md` (gitignored — see `local-context.md`).
+Leave an element out and the model falls back to its training bias, which is
+exactly the generic-anime average the project exists to avoid.
+
+1. **Sub-style anchor** — medium and era, not "anime style". Here: high-end
+   digital anime illustration transitioning from 90s cel animation.
+2. **Linework descriptor** — tapered sweeping lines *plus* bold structural ink
+   contours for hard surfaces; selective cross-hatching.
+3. **Color language** — saturated jewel tones, digital gradient maps,
+   high-contrast flat color blocking.
+4. **Lighting/shading engine** — 1/2/3 shadow system, ambient occlusion,
+   chiaroscuro, key/fill/rim.
+5. **Atmosphere and mood** — cinematic isolation, psychological tension,
+   melancholy.
+6. **Technical tags** — specular refraction in eyes, anisotropic metallic
+   luster, visible cel-paint texture, subtle grain.
+
+The notebook's `STYLE_*` tag bundles are this structure compressed:
+`STYLE_ANATOMY_TAGS` ≈ 1, `STYLE_RENDER_TAGS` ≈ 2+4, `STYLE_MATERIAL_TAGS` ≈
+3+6, `STYLE_COMPOSITION_TAGS` ≈ 5. Keep that mapping in mind when editing a
+bundle — dropping a tag usually means dropping an element.
+
+A full prose ordering also exists for natural-language-capable image tools
+(subject → camera → environment → style core → linework → color → lighting →
+materials → mood → quality control → negative). That's the form in
+`lora/prompts/dataset_plan.csv`; it is **not** what the current checkpoint
+wants.
+
 ## The core constraint: CLIP 77-token limit
 
 SDXL's two text encoders each truncate at ~77 tokens per channel. Early
@@ -30,6 +62,14 @@ here (from v3 onward):
 
 This lets the full style grammar fit under the token ceiling by splitting it
 across two channels instead of cramming it into one.
+
+**Caveat, learned the hard way:** `prompt_2` is not a style-only channel. It
+conditions subject semantics too. A real run with genre nouns in `prompt_2`
+(`fantasy, science fiction, reflective metal, ...`) turned a `1girl, solo,
+portrait` prompt into a mecha — see `generation-runs.md`, Run C. Keep
+`prompt_2` restricted to rendering / material / composition vocabulary, and
+re-validate any `prompt_2` change against a `USE_PROMPT_2 = False` control at
+the same step count before scaling a batch up.
 
 ## Notebook version history
 
@@ -101,6 +141,34 @@ All three enforce the same invariant (asserted in the notebook): every row's
   1216×832, square 1024×1024.
 - Optional stages, both off by default: SDXL refiner (`USE_REFINER`) and a 4x
   upscaler (`USE_FINAL_UPSCALER`).
+
+## Onoma's own guidance for the Illustrious family
+
+From the Illustrious-XL model card (local copy: `.memory/onoma_ai/README.md`;
+technical report: arXiv:2409.19946). Worth following because it comes from the
+people who trained the checkpoint:
+
+- **Sampling:** Euler a, 20-28 steps, CFG 5-7.5. The notebook's 28 steps /
+  CFG 6.5 sits inside this; its `dpmpp_2m_karras` default is a deliberate
+  departure for aesthetic detail, noted in the CONFIG cell.
+- **Quality tags** are a supported, trained vocabulary:
+  `worst quality`, `bad quality`, `average quality`, `good quality`,
+  `best quality`, `masterpiece`. Prefer these exact strings over invented
+  quality filler.
+- **"The model does not have any default style. This is intended behavior for
+  the base model."** This is the single most important line for this project:
+  a base checkpoint with no aesthetic tuning will not volunteer style. All
+  style must come from the prompt now, and from the LoRA later. It also
+  explains why output reads generic — that is the checkpoint behaving as
+  designed, not a prompt bug (see `generation-runs.md`).
+- **Don't over-stack composition tags.** Onoma explicitly warns that
+  `close-up`, `upside-down`, `cowboy shot` etc. conflict with each other and
+  confuse the model. Use one composition tag per prompt (`upper body`,
+  `portrait`, `cowboy shot`, `full body`).
+- Their example negative prompts are the source of several tags already in
+  `NEGATIVE_PROMPT` (`worst quality, comic, multiple views, lowres,
+  displeasing, scan artifacts, monochrome, greyscale, jpeg artifacts,
+  extra digits, fewer digits`).
 
 ## Escalation rule baked into the notebook
 

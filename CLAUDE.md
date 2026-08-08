@@ -31,10 +31,17 @@ LoRA-preparation pipeline. Most "code" lives inside Jupyter notebooks in
    workflow, training configs, and the base-model decision record (three
    options researched, one chosen as canonical for both candidate generation
    and LoRA training).
-6. `.agents/repo-notes.md` — where the repo's actual structure diverges from
-   what `README.md`/`AGENTS.md` describe (e.g. `.memory/` and `data/` don't
-   exist in a fresh checkout), environment quirks, and the local/Colab parity
-   rule.
+6. `.agents/generation-runs.md` — what real runs have achieved so far and the
+   settings not worth repeating. Read before recommending generation defaults.
+7. `.agents/local-context.md` — map of the gitignored local folders
+   (`.memory/`, `data/`, `output/`): what's in them, what was distilled into
+   `.agents/`, and the security rules for them.
+8. `.agents/repo-notes.md` — where the repo's actual structure diverges from
+   what `README.md`/`AGENTS.md` describe, environment quirks, and the
+   local/Colab parity rule.
+9. `.agents/img2img-workflow.md` and `.agents/custom-gpt.md` — the designed
+   photo→style conversion path, and the upstream ChatGPT that authored much of
+   the prompt/caption data. Read when working in those areas.
 
 ## The one rule that matters most here
 
@@ -71,10 +78,13 @@ notebook-only edit as done.
 
 ## Working conventions
 
-- No automated test suite. Validate with a small generation smoke test
-  (`NUM_IMAGES_PER_PROMPT = 2`, `NUM_INFERENCE_STEPS = 38`,
-  `GUIDANCE_SCALE = 7.0`, `CLIP_SKIP = 2` per `AGENTS.md`) rather than
-  claiming a change works untested.
+- No automated test suite. Validate with a small generation smoke test at the
+  notebook's defaults (`NUM_IMAGES_PER_PROMPT = 1`,
+  `NUM_INFERENCE_STEPS = 28`, `GUIDANCE_SCALE = 6.5`, `CLIP_SKIP = None`)
+  rather than claiming a change works untested.
+- The project is early: nothing that didn't work is worth preserving. Prune
+  stale guidance instead of documenting around it, and keep
+  `OnomaAIResearch/Illustrious-XL-v2.0` as the single assumed base model.
 - Never put style words (`anime`, `cel-shaded`, `glass eyes`, etc.) in final
   LoRA captions — captions are content-only and must start with `nacel_v1,`.
 - Never use the literal string `Nocturne Aegis Cel` inside a *generation*
