@@ -9,9 +9,25 @@ This repository defines the `Nocturne Aegis Cel` style system and the tooling ne
 - `data/prompts_illustrious_v3.json`: prompt data used by the generator.
 - `data/previous/`: archived earlier project packs; treat as reference material, not active source.
 - `lora/`: LoRA training pack, including `configs/`, `prompts/`, `captions/`, `dataset_seed/`, and `tools/`.
-- `.memory/`: project memory and style-definition documents. Treat these as the canonical source for project intent, style rules, captioning constraints, and the planned LoRA workflow.
+- `.memory/`: referenced historically as project memory and style-definition documents, but this directory is gitignored and not present in a fresh checkout. Do not assume it exists.
+- `.agents/`: the actual tracked repository memory. `README.md` there indexes it; `style-bible.md`, `prompt-architecture.md`, `lora-training.md`, and `repo-notes.md` are the canonical source for style rules, prompting technique, LoRA workflow, and known repo discrepancies. Read before non-trivial changes to prompts, style tags, captions, or training configs.
 
 Keep generated images, model files, and transient training outputs out of source directories unless they are intentional seed/reference assets.
+
+## Agent Memory & Local/Colab Parity
+
+This repo targets both local Python execution and Google Colab, and Colab is
+the primary/production environment. Notebooks guard Colab-only calls (Drive
+mount, Colab Secrets) behind `try/except google.colab` imports so the same
+cells run locally too — follow that pattern for new Colab-specific code.
+
+When you change style tags, prompt content, captioning rules, or generation
+defaults, update every place that representation lives, not just the file you
+started in: the active notebook, its `PROMPTS_FILE` JSON, `lora/prompts/*`,
+and `lora/configs/*` as applicable. See `.agents/repo-notes.md` for the full
+checklist and current known gaps (e.g. base-model choice differs between the
+candidate-generation notebook and the LoRA training configs — don't silently
+reconcile it without checking first).
 
 ## Build, Test, and Development Commands
 
