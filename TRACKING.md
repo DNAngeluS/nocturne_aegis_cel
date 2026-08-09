@@ -31,7 +31,7 @@ scoped to what's already in the notebook) and **Architecture Improvements**
   Future nbformat versions will hard-error instead of warn. Add unique ids
   to these two cells so the notebook validates cleanly with no warnings.
 
-- [ ] **2. Relax the hardcoded 3-prompt assert**
+- [x] **2. Relax the hardcoded 3-prompt assert** — done 2026-08-09
   Cell `id=0350551b` asserts `len(prompt_rows) == 3`, which locks the
   notebook to exactly 3 prompt rows and blocks any run-size flexibility.
   This is the root blocker behind Architecture Improvement A (configurable

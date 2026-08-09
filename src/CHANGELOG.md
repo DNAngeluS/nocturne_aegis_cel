@@ -21,6 +21,30 @@ notebook; changes to it get logged here instead.
 
 _(nothing yet — add new entries above this line as they land)_
 
+## 2026-08-09 — Prompt-set cell no longer requires exactly 3 rows (TRACKING Fix #2)
+
+- Replaced `assert len(prompt_rows) == 3` in the prompt-set cell (`0350551b`)
+  with **shape validation instead of count validation**: the file must be a
+  non-empty JSON list of objects, each carrying `id`/`aspect`/`content_tags`/
+  `caption`, and each caption must still start with `nacel_v1,`. Run size is
+  now whatever `PROMPTS_FILE` contains.
+- **Why:** the hardcoded literal locked every run to 3 images and was the
+  root blocker behind the configurable-run-size work (TRACKING item A). The
+  count was never a correctness property — the *subject spread* is what
+  matters — so it's now reported, not enforced.
+- The cell prints rows loaded, aspects used, and total images for the run
+  (`rows x NUM_IMAGES_PER_PROMPT`), plus a **soft note** (not a failure) when
+  fewer than 3 rows are present, since that's too little subject spread to
+  tell a style problem from a single-subject problem.
+- Updated the "Prompt Set" markdown cell (`f1ccc966`) to describe the 3-row
+  default as the current prompt file's content rather than a requirement.
+- No change to `PROMPTS_FILE` itself, `lora/prompts/*`, or `lora/configs/*` —
+  the default file is still the same 3 subjects, so generation defaults and
+  the dataset plan are unaffected.
+- Follow-up: configurable run size from the `CONFIG` cell is TRACKING item A;
+  the "Generate 3 Iteration Images" heading and the contact sheet's `cols=3`
+  still assume a 3-image run and should be revisited there.
+
 ## 2026-08-08 — Consolidated into `nocturne_aegis_gen.ipynb`; retired the file-per-version scheme
 
 - Created `src/nocturne_aegis_gen.ipynb`, seeded from the working state of
